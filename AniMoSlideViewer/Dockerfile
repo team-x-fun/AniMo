@@ -6,12 +6,15 @@ RUN apk add --no-cache --virtual=build-dependencies python make g++ && \
   apk add --no-cache curl libc6-compat && \
   apk add --no-cache yarn
 
-COPY . .
+COPY package.json .
+COPY yarn.lock .
 
 RUN yarn --frozen-lockfile --production && \
   yarn cache clean && \
   apk del build-dependencies && \
   rm -rf /var/cache/apk/*
+
+COPY . .
 
 ENV PORT 3000
 
