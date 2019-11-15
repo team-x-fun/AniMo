@@ -1,4 +1,4 @@
-FROM node:12.13.0-alpine
+FROM node:12.13.0-alpine as builder
 
 WORKDIR /client
 
@@ -14,10 +14,16 @@ RUN yarn --frozen-lockfile --production && \
   apk del build-dependencies && \
   rm -rf /var/cache/apk/*
 
-COPY . .
+COPY src src/
+COPY public public/
+COPY ionic.config.json .
+COPY tsconfig.json .
 
-ENV PORT 3000
+RUN yarn build
 
-EXPOSE 3000
-ENTRYPOINT ["yarn"]
-CMD ["start"]
+FROM alpine
+RUN apk add --no-cache yarn
+RUN yarn global add serve
+COPY --from=builder /client/build /build
+expose 5000
+CMD ["serve", "-s", "build"]
