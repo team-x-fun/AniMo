@@ -53,7 +53,7 @@ export const SlideShowPage: React.FC = () => {
 
   const handleFullScreenChange = (enabled: boolean) => setFullScreen(enabled);
   const socket = socketIOClient.connect(
-    'http://ec2-54-65-64-81.ap-northeast-1.compute.amazonaws.com'
+    'http://animo-server.animo.svc.cluster.local'
   );
 
   useEffect(() => {
